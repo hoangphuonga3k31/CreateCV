@@ -3,7 +3,8 @@ import {
     Text,
     TouchableOpacity,
     ScrollView,
-    StyleSheet
+    StyleSheet,
+    Modal
 } from "react-native";
 import React, { useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
@@ -12,6 +13,7 @@ const JobDetail = ({route, navigation}) => {
 
     const { id, otherParams } = route.params;
     const [job, setJob] = useState([])
+    const [modalVisible, setModalVisible] = useState(false);
     const userId = useSelector((state) => state.userId);
 
     // console.log(id)
@@ -27,12 +29,14 @@ const JobDetail = ({route, navigation}) => {
             })
               .then((res) => res.json())
               .then(data => {
+                // console.log(data)
                 setJob(data)
               })
         }
         
         useEffect(() => {
           fetchData()
+          console.log(job)
         }, [])
 
         async function handleApplyJob() {
@@ -40,55 +44,82 @@ const JobDetail = ({route, navigation}) => {
         }
 
         async function applyJob() {
+            setModalVisible(true)
             
         }
 
     return(
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.title}>{job.title}</Text>
-                <Text style={{opacity: 0.5, right: "-55%"}}>Expired Day: {job.untilDate}</Text>
-            </View>
-            <ScrollView style={styles.content}>
+        <View>
 
-                <View style={styles.tag}>
-                    <Text style={styles.tagText}>General information:</Text>
-                    <View style={styles.info}>
-                        <Text style={styles.generalInfoTextLine}>- Salary: {job.minSalary} to {job.maxSalary}</Text>
-                        <Text style={styles.generalInfoTextLine}>- {job.FulltimeOrParttime}</Text>
-                        <Text style={styles.generalInfoTextLine}>- Number of recruitment: {job.numberOfRecruiment}</Text>
-                        <Text style={styles.generalInfoTextLine}>- Experience: {job.experience} year(s)</Text>
-                        <Text style={styles.generalInfoTextLine}>- Address: {job.address}</Text>
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <Text style={styles.title}>{job.title}</Text>
+                    <Text style={{opacity: 0.5, right: "-55%"}}>Expired Day: {job.untilDate}</Text>
+                </View>
+                <ScrollView style={styles.content}>
+
+                    <View style={styles.tag}>
+                        <Text style={styles.tagText}>General information:</Text>
+                        <View style={styles.info}>
+                            <Text style={styles.generalInfoTextLine}>- Salary: {job.minSalary} to {job.maxSalary}</Text>
+                            <Text style={styles.generalInfoTextLine}>- {job.FulltimeOrParttime}</Text>
+                            <Text style={styles.generalInfoTextLine}>- Number of recruitment: {job.numberOfRecruiment}</Text>
+                            <Text style={styles.generalInfoTextLine}>- Experience: {job.experience} year(s)</Text>
+                            <Text style={styles.generalInfoTextLine}>- Address: {job.address}</Text>
+                        </View>
                     </View>
-                </View>
 
-                <View style={styles.tag}>
-                    <Text style={styles.tagText}>Job description:</Text>
-                    <Text style={styles.info}>{job.jobDescription}</Text>
-                </View>
+                    <View style={styles.tag}>
+                        <Text style={styles.tagText}>Job description:</Text>
+                        <Text style={styles.info}>{job.jobDescription}</Text>
+                    </View>
 
-                <View style={styles.tag}>
-                    <Text style={styles.tagText}>Recruitment:</Text>
-                    <Text style={styles.info}>{job.recruitment}</Text>
+                    <View style={styles.tag}>
+                        <Text style={styles.tagText}>Recruitment:</Text>
+                        <Text style={styles.info}>{job.recruitment}</Text>
+                    </View>
+                
+                    <View style={styles.tag}>
+                        <Text style={styles.tagText}>Treatment:</Text>
+                        <Text style={styles.info}>{job.treatment}</Text>
+                    </View>
+                
+            </ScrollView>
+                <View style={styles.buttonParentContainer}>
+                    <TouchableOpacity 
+                        style={styles.buttonContainer}
+                        onPress={() => {
+                            handleApplyJob()
+                        }}>
+                        <Text>Apply now!</Text>
+                    </TouchableOpacity>
                 </View>
-            
-                <View style={styles.tag}>
-                    <Text style={styles.tagText}>Treatment:</Text>
-                    <Text style={styles.info}>{job.treatment}</Text>
-                </View>
-            
-        </ScrollView>
-            <View style={styles.buttonParentContainer}>
-                <TouchableOpacity 
-                    style={styles.buttonContainer}
-                    onPress={() => {
-                        handleApplyJob()
-                    }}>
-                    <Text>Apply now!</Text>
-                </TouchableOpacity>
             </View>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                  Alert.alert("Modal has been closed.");
+                  setModalVisible(!modalVisible);
+                }}
+              >
+                <View style={styles.centeredView}>
+                  <View style={styles.modalView}>
+                      <Text>Set your information!</Text>
+                      <TouchableOpacity 
+                          style={[styles.buttonContainer, styles.loginButton]}
+                          onPress={() => {
+                            console.log("clicked!")
+                            setModalVisible(false)
+                          }}>
+                        <Text>OK!</Text>
+                      </TouchableOpacity>
+                  </View>
+                </View>
+            </Modal>
         </View>
-        
     )
 }
 
@@ -160,6 +191,22 @@ const styles = StyleSheet.create({
         // width: 200,
         // textAlign: "center",
       },
+
+    modalView: {
+      margin: 20,
+      backgroundColor: "white",
+      borderRadius: 20,
+      padding: 35,
+      alignItems: "center",
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5
+    },
 })
 
 export default JobDetail

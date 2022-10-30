@@ -4,6 +4,7 @@ import {
     StyleSheet,
     Text,
     View,
+    TouchableOpacity
   } from "react-native";
 import { useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
@@ -12,7 +13,7 @@ import { List } from 'react-native-paper';
 import SelectList from 'react-native-dropdown-select-list';
 
 function CreateCVScreen({ navigation }) {
-  const [apliedJobsJist, setApliedJobsList] = useState([])
+  const [apliedJobsJist, setApliedJobsList] = useState([]);
   const userId = useSelector((state) => state.info.id);
 
 
@@ -21,6 +22,7 @@ function CreateCVScreen({ navigation }) {
   }
     
   async function fetchData() {
+
     await fetch(`https://createcvserver.vercel.app/cvinfo/${userId}`, {
       method: 'GET', 
       mode: 'cors', 
@@ -29,17 +31,23 @@ function CreateCVScreen({ navigation }) {
       }
     })
       .then((res) => res.json())
-      .then((data) => {
-        // console.log(data)
-        // console.log(apliedJobsJist.length)
+      .then(data => {
         setApliedJobsList(data)
-        console.log(apliedJobsJist)
-
       })
   }
 
+  const handleSelected = id => {
+  console.log(id);
+  navigation.navigate( 'Create CV', {
+    id: id,
+    otherParams: "send successful"
+  } )
+}
+
+
   useEffect(() => {
     fetchData();
+    
   }, []);
 
 
@@ -53,11 +61,29 @@ function CreateCVScreen({ navigation }) {
           To create one click one plus (+) button
           </Text>
           :
-          <View>
-            <Text>abcd</Text>
-            <Text>id: {apliedJobsJist.id}</Text>
-            <Text>address: {apliedJobsJist.address}</Text>
-            <Text>userhash: {apliedJobsJist.userhash}</Text>
+          <View style={styles.cvinfoContainer}>
+            <Text style={styles.header}>Yours CVs</Text>
+            {apliedJobsJist.map(cv => (
+              <View>
+                <TouchableOpacity 
+                  key={cv.id} 
+                  style={styles.centeredView}
+                  onPress={() => {
+                  handleSelected(cv.id)
+                  }}>
+                  <List.Item 
+                    style={styles.item}
+                    title={cv.id}
+                    description={cv.address}
+                    
+                    left={props => <List.Icon {...props} icon="checkbox-marked-outline" />}
+                  />
+                </TouchableOpacity> 
+              </View>
+              
+              )
+            )}
+            
             
           </View>
         }
@@ -80,8 +106,11 @@ const styles = StyleSheet.create({
         // alignItems: "center"
     },
     item: {
-        width: 200,
-        minWidth: 200
+        marginLeft: 10,
+        width: 350,
+        borderTopColor: "black",
+        borderTopWidth: 2,
+        borderStyle: "solid"
     },
     noResumeContainer:{
       flex: 1,
@@ -102,6 +131,29 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: '#92B2FD',
     zIndex: 1
+  },
+
+  cvinfoContainer: {
+    position: "absolute",
+    top: 20,
+    left: 0,
+    alignItems: "center"
+  },
+
+  header: {
+    fontSize: 20,
+    textAlign: "left",
+    padding: 10,
+    borderBottomColor: 'black',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    marginTop: 70
+  },
+
+  centeredView: {
+    // flex: 1,
+    // justifyContent: "center",
+    // alignItems: "center",
+    // marginTop: 22
   },
 })
 
