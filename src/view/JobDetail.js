@@ -14,10 +14,26 @@ const JobDetail = ({route, navigation}) => {
     const { id, otherParams } = route.params;
     const [job, setJob] = useState([])
     const [modalVisible, setModalVisible] = useState(false);
-    const userId = useSelector((state) => state.userId);
+    const userId = useSelector((state) => state.info.id);
+    const [isAplied, setIsAplied] = useState();
 
-    // console.log(id)
-    // console.log("userinfo: " + userId)
+    async function fetchApliedJobsList() {
+        const fetchLink = `https://createcvserver.vercel.app/apliedjobslist/${userId}`
+        
+        await fetch(fetchLink, {
+          method: 'GET', 
+          mode: 'cors', 
+          headers: {
+              'Content-type': 'application/json'
+          }
+        })
+          .then((res) => res.json())
+          .then(data => {
+            // setApliedJobsList(data)
+            console.log(data.some(job => job.jobId==id))
+            setIsAplied(data.some(apliedJob => apliedJob.jobId==id))
+          })
+      }
 
     async function fetchData() {
           await fetch(`https://createcvserver.vercel.app/jobs/${id}`, {
@@ -29,18 +45,24 @@ const JobDetail = ({route, navigation}) => {
             })
               .then((res) => res.json())
               .then(data => {
-                // console.log(data)
                 setJob(data)
               })
         }
         
         useEffect(() => {
+            console.log(userId)
           fetchData()
-          console.log(job)
+          fetchApliedJobsList()
+        //   setIsAplied(apliedJobsJist.some(job => job.jobId == id))
+        //   console.log(isAplied)
         }, [])
 
         async function handleApplyJob() {
             await applyJob();
+        }
+
+        async function handleCancelJob() {
+
         }
 
         async function applyJob() {
@@ -86,13 +108,24 @@ const JobDetail = ({route, navigation}) => {
                 
             </ScrollView>
                 <View style={styles.buttonParentContainer}>
-                    <TouchableOpacity 
+                    {isAplied ? (
+                        <TouchableOpacity 
+                        style={styles.buttonCancelContainer}
+                        onPress={() => {
+                            handleCancelJob()
+                        }}>
+                        <Text>Applied! Want to cancel?</Text>
+                    </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity 
                         style={styles.buttonContainer}
                         onPress={() => {
                             handleApplyJob()
                         }}>
                         <Text>Apply now!</Text>
                     </TouchableOpacity>
+                    )}
+                    
                 </View>
             </View>
 
@@ -190,6 +223,16 @@ const styles = StyleSheet.create({
         backgroundColor: "#00b5ec",
         // width: 200,
         // textAlign: "center",
+      },
+
+      buttonCancelContainer: {
+        height:45,
+        justifyContent: 'center',
+        alignItems: 'center',
+        // marginBottom:20,
+        width:250,
+        borderRadius:30,
+        backgroundColor: "#FF0099",
       },
 
     modalView: {

@@ -35,7 +35,10 @@ const MainView = () => {
                     })}
                 >
                     <Tab.Screen name="Home" component={HomeScreen} />
-                    <Tab.Screen name="List of CV" component={CreateCVScreen} />
+                    <Tab.Screen name="List of CV" component={CreateCVScreen} options={{ unmountOnBlur: true }}
+                        listeners={({ navigation }) => ({
+                            blur: () => navigation.setParams({ screen: undefined }),
+                        })}/>
                     <Tab.Screen name="Settings" component={SettingsScreen} />
                 </Tab.Navigator>
         </>

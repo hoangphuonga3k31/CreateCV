@@ -44,13 +44,15 @@ function CreateCVScreen({ navigation }) {
   } )
 }
 
-
   useEffect(() => {
+    
     fetchData();
+    // const focusHandler = navigation.addListener('focus', () => {
+    //   console.log('Refreshed');
+    // });
+    // return focusHandler;
     
   }, []);
-
-
 
     return (
       
@@ -64,9 +66,8 @@ function CreateCVScreen({ navigation }) {
           <View style={styles.cvinfoContainer}>
             <Text style={styles.header}>Yours CVs</Text>
             {apliedJobsJist.map(cv => (
-              <View>
+              <View key={cv.id} >
                 <TouchableOpacity 
-                  key={cv.id} 
                   style={styles.centeredView}
                   onPress={() => {
                   handleSelected(cv.id)

@@ -4,6 +4,7 @@ import {
     TextInput,
     StyleSheet,
     TouchableOpacity,
+    ScrollView
 } from 'react-native';
 import RadioButtonRN from 'radio-buttons-react-native';
 import {useState, useEffect} from 'react';
@@ -14,6 +15,9 @@ const EditInfoScreen = () => {
     const [name, setName] = useState("")
     const [yearOfBirth, setyearOfBirth] = useState("")
     const [gender, setGender] = useState("")
+    const [email, setEmail] = useState("")
+    const [phone, setPhone] = useState("")
+    const [address, setAddress] = useState("")
 
     const userId = useSelector((state) => state.info.id);
 
@@ -53,8 +57,9 @@ async function setInfoRequest(name, yearOfBirth, gender) {
     }
 
     return(
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <View>
+            <Text style={[styles.textContent, styles.catalog]}>General informations</Text>
                 <Text style={styles.textContent}>Name:</Text>
                 <TextInput 
                     style={styles.input}
@@ -79,8 +84,38 @@ async function setInfoRequest(name, yearOfBirth, gender) {
                         selectedBtn={(e) => setGender(e.value)}
                     />
                 </View>
+
                 
                 
+                
+            </View>
+
+            <View>
+            <Text style={[styles.textContent, styles.catalog]}>Contact</Text>
+
+                <Text style={styles.textContent}>Address:</Text>
+                <TextInput 
+                    style={styles.input}
+                    value={address}
+                    placeholder="Address..."
+                    onChangeText={(address) => setAddress(address)}
+                />
+
+                <Text style={styles.textContent}>Email:</Text>
+                <TextInput 
+                    style={styles.input}
+                    value={email}
+                    placeholder="Email..."
+                    onChangeText={(email) => setEmail(email)}
+                />
+
+                <Text style={styles.textContent}>Phone:</Text>
+                <TextInput 
+                    style={styles.input}
+                    value={phone}
+                    placeholder="Phone..."
+                    onChangeText={(phone) => setPhone(phone)}
+                />
             </View>
 
             <View style={styles.buttonContainer}>
@@ -90,7 +125,7 @@ async function setInfoRequest(name, yearOfBirth, gender) {
                     <Text>Submit</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </ScrollView>
         
     )
 }
@@ -107,6 +142,17 @@ const styles = StyleSheet.create({
       padding: 10,
     },
 
+    catalogView: {
+        borderBottomColor: "black",
+        borderBottomWidth: 1,
+        paddingBottom: 20
+    },
+
+    catalog: {
+        marginTop: 20,
+        fontWeight: 'bold',
+        fontSize: 20
+    },
 
     textContent: {
         marginLeft: 10
