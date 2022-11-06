@@ -147,10 +147,13 @@ function SettingsScreen({ navigation }) {
             </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => console.log("clicked")}>
-            <View style={{
+            <TouchableOpacity style={{
                 flexDirection: 'row',
                 paddingVertical: 10,
                 alignItems: 'center'
+            }}
+            onPress={()=> {
+                navigation.navigate('Aplied Jobs List')
             }}>
                 <Icon
                     name='envelope'
@@ -171,7 +174,7 @@ function SettingsScreen({ navigation }) {
                     }}
                     size={20} color={'black'}
                 />
-            </View>
+            </TouchableOpacity>
             </TouchableOpacity>
             
             <TouchableOpacity style={{

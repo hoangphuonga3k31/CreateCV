@@ -74,8 +74,8 @@ function CreateCVScreen({ navigation }) {
                   }}>
                   <List.Item 
                     style={styles.item}
-                    title={cv.id}
-                    description={cv.address}
+                    title={cv.title}
+                    description={cv.job}
                     
                     left={props => <List.Icon {...props} icon="checkbox-marked-outline" />}
                   />

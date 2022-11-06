@@ -20,6 +20,7 @@ import JobDetail from './src/view/JobDetail';
 import EditInfoScreen from './src/view/EditInfoScreen';
 import SetInfoScreen from './src/view/SetInfoScreen';
 import CreateCV from './src/view/CreateCV';
+import ApliedJobsList from './src/view/ApliedJobsList';
 
 
 import { configureStore } from '@reduxjs/toolkit'
@@ -167,6 +168,7 @@ export default function App({ navigation }) {
                     <Stack.Screen name="Edit Personal Information" component={EditInfoScreen} />
                     <Stack.Screen name="Set Personal Information" component={SetInfoScreen} />
                     <Stack.Screen name="Create CV" component={CreateCV} />
+                    <Stack.Screen name="Aplied Jobs List" component={ApliedJobsList} />
                   </>
                   
                 )}
